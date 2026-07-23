@@ -1,1 +1,13 @@
-{"name":"heritage","background":"F7F2E9","ink":"26211E","accent":"9B3329","muted":"716B64","overlay":"312622","style":"cultural publication, craft detail, warm low saturation"}
+{
+  "name": "heritage",
+  "background": "F7F2E9",
+  "ink": "26211E",
+  "accent": "9B3329",
+  "muted": "716B64",
+  "overlay": "312622",
+  "style": "cultural publication, craft detail, warm low saturation",
+  "variants": [
+    { "name": "light-minimal", "coverStyle": "light", "titleSize": 30 },
+    { "name": "dark-bleed", "coverStyle": "dark", "titleSize": 32 }
+  ]
+}

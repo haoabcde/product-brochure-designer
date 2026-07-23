@@ -4,6 +4,7 @@ import { clip } from './utils.mjs';
 export function cover(slide, ctx) {
   const { theme, product, images, page } = ctx;
   const photo = images.find(img => img.role === 'cover') || images[0];
+  const titleSize = theme.titleSize || 32;
   slide.background = { color: theme.background };
   if (photo?.path) {
     slide.addImage({ path: photo.path, x: 0, y: 0, w: A4.width, h: A4.height });
@@ -12,7 +13,7 @@ export function cover(slide, ctx) {
     slide.addShape('rect', { x: 0, y: 0, w: A4.width, h: A4.height, fill: { color: theme.overlay }, line: { color: theme.overlay } });
   }
   addLabel(slide, product.category || 'PRODUCT HANDBOOK', theme, A4.margin, 1.2);
-  slide.addText(product.name, { x: A4.margin, y: 7.2, w: 6.5, h: 1.4, fontFace: 'Aptos Display', bold: true, fontSize: 32, color: 'FFFFFF', margin: 0, fit: 'shrink' });
+  slide.addText(product.name, { x: A4.margin, y: 7.2, w: 6.5, h: 1.4, fontFace: 'Aptos Display', bold: true, fontSize: titleSize, color: 'FFFFFF', margin: 0, fit: 'shrink' });
   slide.addText(product.subtitle || product.tagline || '产品手册', { x: A4.margin, y: 8.75, w: 5.8, h: 0.4, fontFace: 'Aptos', fontSize: 13, color: 'FFFFFF', margin: 0, fit: 'shrink' });
   slide.addText(`${String(page.page).padStart(2, '0')} / A4 PRODUCT HANDBOOK`, { x: A4.margin, y: 10.6, w: 3, h: 0.16, fontFace: 'Aptos', fontSize: 7.5, color: 'FFFFFF', charSpacing: 1.3, margin: 0 });
 }
