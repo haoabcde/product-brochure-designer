@@ -16,10 +16,13 @@ export async function generatePptx({ product, plan, images, projectDir, skillDir
   pptx.company = product.brand?.name || '';
   pptx.lang = 'zh-CN';
   const bounds = [];
+  let previousMode = null;
   for (const page of plan.pages) {
     const slide = pptx.addSlide();
-    renderPage(slide, { ...page, product, images, theme });
-    bounds.push({ page: page.page, type: page.type, safeMarginInches: 0.62, editable: ['title', 'body', 'facts', 'contact', 'disclaimer'] });
+    const ctx = { ...page, product, images, theme, previousMode };
+    renderPage(slide, ctx);
+    previousMode = ctx.previousMode;
+    bounds.push({ page: page.page, type: page.type, mode: ctx.previousMode, safeMarginInches: 0.62, editable: ['title', 'body', 'facts', 'contact', 'disclaimer'] });
   }
   const outputDir = projectDir;
   await fs.mkdir(outputDir, { recursive: true });
