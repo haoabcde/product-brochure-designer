@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["images"],
+  "properties": {
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "role", "status"],
+        "properties": {
+          "id": {"type": "string"},
+          "path": {"type": "string"},
+          "role": {"type": "string"},
+          "status": {"enum": ["approved", "preview"]},
+          "sourceUrl": {"type": "string"},
+          "rights": {"type": "string"}
+        }
+      }
+    }
+  }
+}

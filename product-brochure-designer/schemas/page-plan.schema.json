@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["preset", "pageCount", "pages"],
+  "properties": {
+    "preset": {"type": "string"},
+    "pageCount": {"enum": [6, 8, 10]},
+    "pages": {"type": "array", "minItems": 6, "maxItems": 10}
+  }
+}

@@ -1,0 +1,11 @@
+# Node.js dependencies
+node_modules/
+
+# Generated outputs
+output/
+examples/*/output/
+.tmp-verify/
+
+# OS files
+.DS_Store
+Thumbs.db

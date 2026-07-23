@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "category": {"type": "string"},
+    "description": {"type": "string"},
+    "subtitle": {"type": "string"},
+    "benefits": {"type": "array", "items": {"type": "object"}},
+    "modules": {"type": "array", "items": {"type": "object"}},
+    "itinerary": {"type": "array", "items": {"type": "object"}},
+    "specifications": {"type": "object"},
+    "brand": {"type": "object"}
+  }
+}
