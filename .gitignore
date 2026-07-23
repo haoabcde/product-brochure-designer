@@ -9,3 +9,6 @@ examples/*/output/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Internal process files
+.superpowers/
