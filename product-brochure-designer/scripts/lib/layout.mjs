@@ -9,7 +9,7 @@ export function addFooter(slide, product, theme, number) {
 
 export function addPhoto(slide, image, x, y, w, h, theme, transparency = 0) {
   if (!image?.path) return false;
-  slide.addImage({ path: image.path, x, y, w, h, transparency });
+  slide.addImage({ path: image.path, sizing: { type: 'cover', x, y, w, h }, transparency });
   slide.addShape('rect', { x, y, w, h, fill: { color: theme.overlay, transparency: 78 }, line: { color: theme.overlay, transparency: 100 } });
   return true;
 }

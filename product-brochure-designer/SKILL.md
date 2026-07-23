@@ -165,8 +165,10 @@ pnpm promote -- --project output/<产品名>
 1. 加载主题与变体（见 `references/style-presets.md`）。
 2. 为每页选择版式（见 `references/layout-rules.md`）。
 3. 生成 `<产品名>_<mode>.pptx`。
-4. 尝试调用 LibreOffice/soffice 导出 PDF。
+4. 尝试导出 PDF（见下方说明）。
 5. 生成 `reports/quality.json`。
+
+**PDF 导出策略**：PPTX 是唯一核心交付物。PDF 转换优先由你（宿主 Agent）使用自己环境中的 Office/PDF 工具完成（例如宿主自带的 office/pdf 技能、WPS、PowerPoint 另存为 PDF）。内置的 `scripts/export-pdf.mjs` 仅作为兜底：它会尝试调用 LibreOffice/soffice，找不到时在报告中记录 `PDF_EXPORT_UNAVAILABLE` 警告，不影响交付。你不需要为本 Skill 专门安装 LibreOffice——如果你的环境已有 PDF 工具，直接用它转换 PPTX 即可。
 
 ### 4.4 模式差异
 
@@ -225,8 +227,8 @@ PPTX 中所有标题、正文、规格、联系方式、免责声明均为可编
 
 ### 6.3 PDF 不可用
 
-- 错误码 `PDF_EXPORT_UNAVAILABLE`：未安装 LibreOffice/soffice。PPTX 仍然有效，可在本地手动导出 PDF。
-- 错误码 `PDF_EXPORT_FAILED`：已找到二进制但导出失败。检查文件路径是否过长、PPTX 是否损坏。
+- 错误码 `PDF_EXPORT_UNAVAILABLE`：未检测到 LibreOffice/soffice。**这不是故障**：PPTX 是核心交付物，你可以用宿主环境自带的 Office/PDF 工具（如 office/pdf 技能、WPS、PowerPoint）把 PPTX 转成 PDF，或提醒用户手动另存。
+- 错误码 `PDF_EXPORT_FAILED`：已找到二进制但导出失败。检查文件路径是否过长、PPTX 是否损坏，或改用宿主工具转换。
 
 ### 6.4 质量报告未通过
 

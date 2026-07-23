@@ -28,12 +28,14 @@ Use the host agent's browser/search capability only to collect images into local
 
 ## PDF export
 
-PDF export is optional. `scripts/export-pdf.mjs` looks for `libreoffice` or `soffice`:
+PDF conversion is delegated to the host agent by default. Many agent environments ship their own Office/PDF tooling (document skills, WPS, PowerPoint "save as PDF"); prefer those to convert the generated PPTX.
+
+The built-in `scripts/export-pdf.mjs` is only a fallback. It looks for `libreoffice` or `soffice`:
 
 - On Linux/macOS: `libreoffice` or `soffice` in `PATH`.
 - On Windows: `soffice.exe` or `libreoffice.exe` in `PATH`.
 
-If neither is available, the PPTX remains valid and `quality.json` records `PDF_EXPORT_UNAVAILABLE`. If the binary is found but export fails, `PDF_EXPORT_FAILED` is recorded.
+If neither is available, the PPTX remains valid and `quality.json` records `PDF_EXPORT_UNAVAILABLE` — a warning, not a failure. Do not install LibreOffice just for this Skill; use the host environment's PDF tooling instead. If the binary is found but export fails, `PDF_EXPORT_FAILED` is recorded.
 
 ## Fonts
 

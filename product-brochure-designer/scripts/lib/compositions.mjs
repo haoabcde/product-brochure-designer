@@ -7,7 +7,7 @@ export function cover(slide, ctx) {
   const titleSize = theme.titleSize || 32;
   slide.background = { color: theme.background };
   if (photo?.path) {
-    slide.addImage({ path: photo.path, x: 0, y: 0, w: A4.width, h: A4.height });
+    slide.addImage({ path: photo.path, sizing: { type: 'cover', x: 0, y: 0, w: A4.width, h: A4.height } });
     slide.addShape('rect', { x: 0, y: 0, w: A4.width, h: A4.height, fill: { color: theme.overlay, transparency: 45 }, line: { color: theme.overlay, transparency: 100 } });
   } else {
     slide.addShape('rect', { x: 0, y: 0, w: A4.width, h: A4.height, fill: { color: theme.overlay }, line: { color: theme.overlay } });
@@ -24,7 +24,7 @@ export function splitLeft(slide, ctx) {
   addFooter(slide, product, theme, page.page);
   const photo = images.find(img => img.role === 'venue' || img.role === 'cover') || images[0];
   if (photo?.path) {
-    slide.addImage({ path: photo.path, x: 0, y: 0, w: 3.2, h: A4.height });
+    slide.addImage({ path: photo.path, sizing: { type: 'cover', x: 0, y: 0, w: 3.2, h: A4.height } });
     slide.addShape('rect', { x: 0, y: 0, w: 3.2, h: A4.height, fill: { color: theme.overlay, transparency: 78 }, line: { color: theme.overlay, transparency: 100 } });
   }
   addLabel(slide, 'INTRODUCTION', theme, 3.8, 0.65);
@@ -38,7 +38,7 @@ export function splitRight(slide, ctx) {
   addFooter(slide, product, theme, page.page);
   const photo = images.find(img => img.role === 'detail' || img.role === 'activity') || images[0];
   if (photo?.path) {
-    slide.addImage({ path: photo.path, x: 4.6, y: 0, w: 3.67, h: A4.height });
+    slide.addImage({ path: photo.path, sizing: { type: 'cover', x: 4.6, y: 0, w: 3.67, h: A4.height } });
     slide.addShape('rect', { x: 4.6, y: 0, w: 3.67, h: A4.height, fill: { color: theme.overlay, transparency: 78 }, line: { color: theme.overlay, transparency: 100 } });
   }
   addLabel(slide, 'KEY VALUE', theme);
@@ -56,7 +56,7 @@ export function fullBleed(slide, ctx) {
   const { theme, product, images } = ctx;
   const photo = images.find(img => img.role === 'detail' || img.role === 'cover') || images[0];
   if (photo?.path) {
-    slide.addImage({ path: photo.path, x: 0, y: 0, w: A4.width, h: A4.height });
+    slide.addImage({ path: photo.path, sizing: { type: 'cover', x: 0, y: 0, w: A4.width, h: A4.height } });
     slide.addShape('rect', { x: 0, y: 0, w: A4.width, h: A4.height, fill: { color: theme.overlay, transparency: 34 }, line: { color: theme.overlay, transparency: 100 } });
   } else {
     slide.addShape('rect', { x: 0, y: 0, w: A4.width, h: A4.height, fill: { color: theme.overlay }, line: { color: theme.overlay } });
