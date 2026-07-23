@@ -50,7 +50,7 @@ export function addPageNumber(slide, number, theme, x, y) {
     h: 0.2,
     fontFace: 'Aptos',
     fontSize: 8,
-    color: theme.muted,
+    color: theme.ink,
     align: 'right',
     margin: 0
   });
