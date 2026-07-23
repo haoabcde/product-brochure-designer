@@ -35,7 +35,7 @@ async function runGenerate(args, command = 'generate') {
   }
   const pptxPath = await generatePptx({ product, plan, images, projectDir, skillDir, mode });
   const pdf = await exportPdf(pptxPath);
-  const quality = await createQualityReport({ product, plan, imageIssues, projectDir, mode, pptxPath, pdf });
+  const quality = await createQualityReport({ product, plan, images, imageIssues, projectDir, mode, pptxPath, pdf });
   console.log(JSON.stringify({ projectDir, pptxPath, pdf, quality }, null, 2));
   if (mode === 'delivery' && !quality.pass) process.exitCode = 2;
   return { projectDir, pptxPath, pdf, quality };

@@ -1,0 +1,25 @@
+{
+  "images": [
+    {
+      "id": "cover",
+      "path": "images/cover.jpg",
+      "role": "hero",
+      "sourceType": "official_wechat",
+      "status": "approved"
+    },
+    {
+      "id": "venue",
+      "path": "images/venue.jpg",
+      "role": "scene",
+      "sourceType": "official_web",
+      "status": "approved"
+    },
+    {
+      "id": "detail",
+      "path": "images/detail.png",
+      "role": "detail",
+      "sourceType": "licensed",
+      "status": "approved"
+    }
+  ]
+}
