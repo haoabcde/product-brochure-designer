@@ -19,7 +19,7 @@ export async function generatePptx({ product, plan, images, projectDir, skillDir
   let previousMode = null;
   for (const page of plan.pages) {
     const slide = pptx.addSlide();
-    const ctx = { ...page, product, images, theme, previousMode };
+    const ctx = { page, product, images, theme, previousMode };
     renderPage(slide, ctx);
     previousMode = ctx.previousMode;
     bounds.push({ page: page.page, type: page.type, mode: ctx.previousMode, safeMarginInches: 0.62, editable: ['title', 'body', 'facts', 'contact', 'disclaimer'] });
