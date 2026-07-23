@@ -25,3 +25,58 @@ export function addLabel(slide, text, theme, x = A4.margin, y = 0.42) {
 export function addBody(slide, text, theme, x, y, w, h, size = 11, color = null) {
   slide.addText(text, { x, y, w, h, fontFace: 'Aptos', fontSize: size, color: color || theme.ink, breakLine: false, valign: 'mid', margin: 0, breakLine: false, fit: 'shrink', paraSpaceAfterPt: 5, breakLine: false });
 }
+
+export function addSectionTitle(slide, title, theme, options = {}) {
+  slide.addText(title, {
+    x: options.x ?? A4.margin,
+    y: options.y ?? 0.68,
+    w: options.w ?? 6.7,
+    h: options.h ?? 0.65,
+    fontFace: 'Aptos Display',
+    bold: true,
+    fontSize: options.size ?? 25,
+    color: options.color ?? theme.ink,
+    breakLine: false,
+    margin: 0,
+    fit: 'shrink'
+  });
+}
+
+export function addPageNumber(slide, number, theme, x, y) {
+  slide.addText(String(number).padStart(2, '0'), {
+    x,
+    y,
+    w: 0.45,
+    h: 0.2,
+    fontFace: 'Aptos',
+    fontSize: 8,
+    color: theme.muted,
+    align: 'right',
+    margin: 0
+  });
+}
+
+export function addTexture(slide, theme, opacity = 6) {
+  const spacing = 0.85;
+  const width = 0.015;
+  for (let x = A4.margin; x < A4.width - A4.margin; x += spacing) {
+    slide.addShape('rect', {
+      x,
+      y: A4.margin,
+      w: width,
+      h: A4.height - A4.margin * 2,
+      fill: { color: theme.accent, transparency: opacity },
+      line: { color: theme.accent, transparency: 100 }
+    });
+  }
+}
+
+export function addDivider(slide, x, y, w, theme) {
+  slide.addShape('line', {
+    x,
+    y,
+    w,
+    h: 0,
+    line: { color: theme.accent, transparency: 40, width: 0.7 }
+  });
+}
