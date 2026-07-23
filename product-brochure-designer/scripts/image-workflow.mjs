@@ -23,14 +23,14 @@ export async function sourcePlan(productPath) {
     officialSources: [
       {
         priority: 1,
-        type: 'wechat_official',
+        type: 'official_wechat',
         accountName: name,
         searchHint: `搜索"${name}"官方公众号，查看最近 3-6 个月推文`,
         note: '封面图和文中高清图通常可直接使用，注意避开右下角水印'
       },
       {
         priority: 2,
-        type: 'official_website',
+        type: 'official_web',
         searchHint: `搜索"${name} 官网"，进入新闻中心/图库/关于我们`,
         note: '优先选择横版、无水印、高分辨率图片'
       }

@@ -34,7 +34,7 @@ If `product.variant` is not set, the variant is chosen deterministically by hash
 
 ## Brand color override
 
-`brand.colors` can override any of: `background`, `ink`, `accent`, `muted`, `overlay`. Keep overrides restrained and consistent with the chosen preset.
+`brand.colors` can override any of: `background`, `ink`, `accent`, `overlay`. Keep overrides restrained and consistent with the chosen preset.
 
 ## Design principles
 

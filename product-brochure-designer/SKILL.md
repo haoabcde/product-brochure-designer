@@ -61,7 +61,7 @@ pnpm generate -- --input /path/to/product.json --images /path/to/images.json --m
 | `contact` | 联系方式 |
 | `disclaimer` | 免责声明 |
 | `logo` | logo 图片路径（相对 `product.json` 所在目录） |
-| `colors` | 可覆盖主题颜色：`background`、`ink`、`accent`、`muted`、`overlay` |
+| `colors` | 可覆盖主题颜色：`background`、`ink`、`accent`、`overlay` |
 
 关键限制：
 

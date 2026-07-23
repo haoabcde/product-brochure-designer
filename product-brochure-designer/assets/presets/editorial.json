@@ -1,13 +1,1 @@
-{
-  "name": "editorial",
-  "background": "F4F6F8",
-  "ink": "152231",
-  "accent": "2D6CDF",
-  "muted": "66788A",
-  "overlay": "102A43",
-  "style": "quiet editorial, modern architecture, generous white space",
-  "variants": [
-    { "name": "light-minimal", "coverStyle": "light", "titleSize": 30 },
-    { "name": "dark-bleed", "coverStyle": "dark", "titleSize": 32 }
-  ]
-}
+{"name": "editorial", "background": "F4F6F8", "ink": "152231", "accent": "2D6CDF", "overlay": "102A43", "style": "quiet editorial, modern architecture, generous white space", "variants": [{"name": "light-minimal", "coverStyle": "light", "titleSize": 30}, {"name": "dark-bleed", "coverStyle": "dark", "titleSize": 32}]}

@@ -48,7 +48,7 @@ export function splitRight(slide, ctx) {
     const y = 1.75 + index * 1.72;
     slide.addText(String(index + 1).padStart(2, '0'), { x: A4.margin, y, w: 0.8, h: 0.55, fontFace: 'Aptos Display', bold: true, fontSize: 26, color: theme.accent, margin: 0 });
     slide.addText(item.title || `亮点 ${index + 1}`, { x: 1.48, y: y + 0.03, w: 2.2, h: 0.28, fontFace: 'Aptos', bold: true, fontSize: 12.5, color: theme.ink, margin: 0, fit: 'shrink' });
-    addBody(slide, clip(item.description || item, 72), theme, 3.55, y, 3.4, 0.62, 9.8, theme.muted);
+    addBody(slide, clip(item.description || item, 72), theme, 3.55, y, 3.4, 0.62, 9.8, theme.ink);
   });
 }
 
@@ -92,6 +92,6 @@ export function timeline(slide, ctx) {
     slide.addShape('ellipse', { x: 0.98, y: y + 0.1, w: 0.24, h: 0.24, fill: { color: theme.accent }, line: { color: theme.accent } });
     slide.addText(item.time || `0${index + 1}`, { x: 1.5, y, w: 1.1, h: 0.25, fontFace: 'Aptos', bold: true, fontSize: 10, color: theme.accent, margin: 0 });
     slide.addText(item.title || `环节 ${index + 1}`, { x: 2.75, y, w: 3.6, h: 0.24, fontFace: 'Aptos', bold: true, fontSize: 12, color: theme.ink, margin: 0, fit: 'shrink' });
-    slide.addText(clip(item.description || item, 86), { x: 2.75, y: y + 0.32, w: 3.7, h: 0.36, fontFace: 'Aptos', fontSize: 9.2, color: theme.muted, margin: 0, fit: 'shrink' });
+    slide.addText(clip(item.description || item, 86), { x: 2.75, y: y + 0.32, w: 3.7, h: 0.36, fontFace: 'Aptos', fontSize: 9.2, color: theme.ink, margin: 0, fit: 'shrink' });
   });
 }

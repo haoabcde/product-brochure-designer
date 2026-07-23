@@ -1,13 +1,1 @@
-{
-  "name": "technology",
-  "background": "EDF1F5",
-  "ink": "101923",
-  "accent": "276EF1",
-  "muted": "5E6C7B",
-  "overlay": "071827",
-  "style": "precise technology, device detail, low-saturation cool tones",
-  "variants": [
-    { "name": "light-minimal", "coverStyle": "light", "titleSize": 30 },
-    { "name": "dark-bleed", "coverStyle": "dark", "titleSize": 32 }
-  ]
-}
+{"name": "technology", "background": "EDF1F5", "ink": "101923", "accent": "276EF1", "overlay": "071827", "style": "precise technology, device detail, low-saturation cool tones", "variants": [{"name": "light-minimal", "coverStyle": "light", "titleSize": 30}, {"name": "dark-bleed", "coverStyle": "dark", "titleSize": 32}]}

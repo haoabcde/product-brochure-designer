@@ -2,9 +2,9 @@ export const A4 = { width: 8.2677, height: 11.6929, margin: 0.62 };
 
 export function addFooter(slide, product, theme, number) {
   const brand = product.brand?.name || '';
-  slide.addShape('line', { x: A4.margin, y: 11.08, w: 7.03, h: 0, line: { color: theme.muted, transparency: 60, width: 0.7 } });
-  slide.addText(brand, { x: A4.margin, y: 11.16, w: 5.5, h: 0.17, fontFace: 'Aptos', fontSize: 7.5, color: theme.muted, margin: 0 });
-  slide.addText(String(number).padStart(2, '0'), { x: 7.16, y: 11.13, w: 0.45, h: 0.2, fontFace: 'Aptos', fontSize: 8, color: theme.muted, align: 'right', margin: 0 });
+  slide.addShape('line', { x: A4.margin, y: 11.08, w: 7.03, h: 0, line: { color: theme.ink, transparency: 60, width: 0.7 } });
+  slide.addText(brand, { x: A4.margin, y: 11.16, w: 5.5, h: 0.17, fontFace: 'Aptos', fontSize: 7.5, color: theme.ink, margin: 0 });
+  slide.addText(String(number).padStart(2, '0'), { x: 7.16, y: 11.13, w: 0.45, h: 0.2, fontFace: 'Aptos', fontSize: 8, color: theme.ink, align: 'right', margin: 0 });
 }
 
 export function addPhoto(slide, image, x, y, w, h, theme, transparency = 0) {
