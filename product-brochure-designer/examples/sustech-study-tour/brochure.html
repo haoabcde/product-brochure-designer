@@ -7,8 +7,10 @@
     01 封面(出血式) → 02 上下结构 → 03 横带条目 → 04 左右分栏 →
     05 时间轴 → 06 大留白声明 → 07 规格表 → 08 大数字/大字 →
     09 全出血高潮 → 10 尾页
-  未包含真实照片：图片位置用渐变占位块（.photo-ph）演示结构；
-  真实任务中替换为 <img class="photo" src="..."> 即可（官方图片优先）。
+  未包含真实照片：02/04 页图片位置用低饱和渐变占位块（.photo-ph）演示结构，
+  同时也是"高级感背景"的示例（design-system.md §5.1：低对比、低饱和、少细节）；
+  03/05/06/07/08 页有意不放图——图是选择不是义务（§5.0）。
+  真实任务中把占位块替换为 <img class="photo" src="..."> 即可（官方图片优先）。
   缺失事实一律显示【待确认】。
 -->
 <html lang="zh-CN">
@@ -64,11 +66,12 @@
     font-size: 7.5pt; opacity: 0.65;
   }
 
-  /* 占位图片块（示例专用；真实任务替换为 <img class="photo">） */
+  /* 占位图片块（示例专用；真实任务替换为 <img class="photo">）
+     同时示范"高级感背景"：低饱和、低对比、柔和过渡（§5.1） */
   .photo-ph { width: 100%; height: 100%; }
-  .ph-1 { background: linear-gradient(160deg, #2D6CDF 0%, #102A43 70%); }
-  .ph-2 { background: linear-gradient(200deg, #3E7A5E 0%, #102A43 75%); }
-  .ph-3 { background: linear-gradient(180deg, #486581 0%, #102A43 80%); }
+  .ph-1 { background: linear-gradient(165deg, #243B55 0%, #102A43 55%, #0B1D30 100%); }
+  .ph-2 { background: linear-gradient(200deg, #2E4A3E 0%, #122B3A 70%); }
+  .ph-3 { background: linear-gradient(180deg, #3A4A5C 0%, #102A43 80%); }
 
   /* 构图 1 · 封面（深色 + 底部标题） */
   .page-cover { background: var(--overlay); color: #fff; }

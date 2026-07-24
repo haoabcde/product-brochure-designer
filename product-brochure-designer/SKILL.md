@@ -95,7 +95,7 @@ node scripts/image-workflow.mjs source-plan --product product.json
 node scripts/image-workflow.mjs manifest --download-dir ./downloads --output images.json
 ```
 
-- 图片数量不设上限，由内容丰富度动态决定；但每页最多一张主图（见设计知识库 §5.4）。
+- 图片数量不设上限，由内容丰富度动态决定；但每页最多一张主图，且**不强制每页有图**——无图的文字页是留白高级感的重要来源（见设计知识库 §5.0）。
 - 质量门槛：无水印、无大文字叠加、封面 ≥2400px 宽、真实场景；禁止 AI 生成图冒充真实场地/活动/人物。
 - `manifest` 生成的草稿默认 `status: preview`；交付前必须人工把合格图片标记为 `approved` 并设置正确 `sourceType`。
 - 交付模式（最终 PDF/PPTX）只允许 `approved` 且来源为官方/授权的图片；样稿阶段可用 `preview` 图，但页面上不标注来源差异——由你在报告中说明。
