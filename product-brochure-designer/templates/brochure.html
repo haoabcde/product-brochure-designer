@@ -12,6 +12,9 @@
   2. 在 <style> 顶部的 CSS 变量中填入你推导的设计 Token（四色槽 + 字体 + 边距）。
   3. 每页是一个 <section class="page">，A4 竖版 210mm × 297mm；全书 6/8/10 页。
   4. 图片用本地相对路径；全部 object-fit: cover 等比裁切，绝不变形。
+     cover 只保比例、不保构图——每张图用 object-position 指定焦点区域，
+     如 <img class="photo" style="object-position: 50% 30%">（人物偏上）。
+     主体保不住时换版式或换图，不要硬裁（见 design-system.md §5.2）。
   5. 文字区与图片区由 grid/flex 分隔，结构上不可能重叠；文字压图时必用渐变遮罩。
   6. 语义 class（page-cover / page-split / page-bleed / page-timeline / page-specs / page-closing）
      是 html-to-pptx 转换锚点：保留这些 class 的页面可转 PPTX；自创新版式仅 PDF 可用。

@@ -18,10 +18,11 @@ The following are rejected in `delivery` mode and by `promote`:
 
 ## Roles and placement
 
-- `cover` — front cover, full-bleed background.
-- `venue` / `context` — campus, location, or scene background for split pages and full-bleed pages.
-- `detail` / `activity` — close-up or action shots for split pages.
+- `cover` — front cover, full-bleed background. 必须横图（宽高比 ≥3:2），主体避开下 1/3（标题区）。
+- `venue` / `context` — campus, location, or scene background for split pages and full-bleed pages. 分栏竖位可用竖图。
+- `detail` / `activity` — close-up or action shots for split pages. 人物活动照注意主体在画面中的位置，便于 `object-position` 保焦点。
 - Official WeChat / website images are sorted to the front and preferred for cover and hero/venue.
+- 栏位比例与图比例匹配优先：需要裁掉画面 >35% 才能塞进栏位的图，不要用于该栏位（换栏位或换图）。
 
 ## Quality rules
 

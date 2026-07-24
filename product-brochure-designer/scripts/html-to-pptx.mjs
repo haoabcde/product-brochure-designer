@@ -8,7 +8,8 @@
  * 文字保留为可编辑文本框，图片以 cover 模式等比裁切填入。
  *
  * 定位：PDF（由浏览器打印 HTML 得到）是高保真交付线；PPTX 是可编辑草稿线——
- * 字号行高按 mm 近似换算，转换后建议在 PowerPoint/WPS 中抽查微调。
+ * 字号行高按 mm 近似换算，图片为居中裁切（pptxgenjs 不支持 object-position 焦点，
+ * 焦点裁切需求请在 PowerPoint/WPS 中手动微调），转换后建议抽查 2–3 页。
  * 使用了模板之外自创新版式的页面会被跳过并在报告中列出（PDF 不受影响）。
  *
  * 用法：node scripts/html-to-pptx.mjs --html brochure.html --output out.pptx

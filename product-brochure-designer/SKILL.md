@@ -152,7 +152,7 @@ node scripts/image-workflow.mjs manifest --download-dir ./downloads --output ima
 用宿主环境的浏览器工具打开 `brochure.html`，逐页截图，对照 `references/design-system.md` §8 反模式清单逐项检查，重点：
 
 1. 文字与图片是否重叠、文字是否可读（遮罩够不够深）
-2. 图片是否变形（宽高比）、是否模糊/廉价
+2. 图片是否变形（宽高比）、是否被居中盲裁（切头/切手/主体截断 → 用 `object-position` 调焦点，保不住就换版式或换图）、是否模糊/廉价
 3. 每页空白率、对齐、间距刻度
 4. 字体是否成功加载（衬线标题是否真的是衬线）
 5. 叙事节奏：密页之后有没有呼吸页
