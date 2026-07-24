@@ -15,7 +15,8 @@
      cover 只保比例、不保构图——每张图用 object-position 指定焦点区域，
      如 <img class="photo" style="object-position: 50% 30%">（人物偏上）。
      主体保不住时换版式或换图，不要硬裁（见 design-system.md §5.2）。
-  5. 文字区与图片区由 grid/flex 分隔，结构上不可能重叠；文字压图时必用渐变遮罩。
+  5. 文字压图必用渐变遮罩；分栏页图与文之间用白色/浅底色渐变淡出，
+     封面/高潮/尾页用深色多层渐变遮罩。渐变是设计语言，禁止光束/彩虹/多色装饰。
   6. 语义 class（page-cover / page-split / page-bleed / page-timeline / page-specs / page-closing）
      是 html-to-pptx 转换锚点：保留这些 class 的页面可转 PPTX；自创新版式仅 PDF 可用。
 -->
