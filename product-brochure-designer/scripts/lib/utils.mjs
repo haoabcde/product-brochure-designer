@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import YAML from 'yaml';
 
 export const INTERNAL_KEY = /(?:成本|分销|渠道|结算|利润|内部|底价|supplier|margin|cost|wholesale|internal)/i;
 export const REQUIRED_FACTS = ['name', 'description'];
@@ -17,7 +16,13 @@ export function parseArgs(argv) {
 
 export async function readData(file) {
   const raw = await fs.readFile(file, 'utf8');
-  return /\.ya?ml$/i.test(file) ? YAML.parse(raw) : JSON.parse(raw);
+  if (!/\.ya?ml$/i.test(file)) return JSON.parse(raw);
+  try {
+    const { default: YAML } = await import('yaml');
+    return YAML.parse(raw);
+  } catch {
+    throw new Error(`读取 YAML 需要可选依赖 yaml：请先运行 pnpm install，或改用 JSON 格式的输入文件（${file}）`);
+  }
 }
 
 export async function writeJson(file, value) {

@@ -2,41 +2,32 @@
 
 ## Runtime
 
-- Node.js 20 or later.
-- Package manager: `pnpm` (preferred) or `npm`.
-- Dependencies: `pptxgenjs` for PPTX generation, `yaml` for YAML product files.
-- No platform-specific binaries are required for PPTX generation.
+- Node.js 20 or later（仅运行图片工作流与检查脚本时需要；主线 HTML→PDF 不依赖 Node）。
+- 主线（HTML 母版 → 浏览器打印 PDF）：**零 npm 依赖**。
+- 可选依赖（`pnpm install` 后可用）：
+  - `pptxgenjs` — `scripts/html-to-pptx.mjs` 把 HTML 转为可编辑 PPTX。
+  - `yaml` — 输入文件使用 YAML 格式时需要（JSON 输入不需要）。
 
 ## Agent hosts
 
-The Skill runs the same way in Codex, Claude Code, WorkBuddy, or any other Node-capable agent environment:
+Skill 在 Codex、Claude Code、WorkBuddy 或任意 Agent 环境中的用法一致：
 
-```bash
-cd product-brochure-designer
-pnpm install
-pnpm validate -- --input product.json --images images.json
-pnpm generate -- --input product.json --images images.json --mode sample
-```
-
-Use the host agent's browser/search capability only to collect images into local files and update `images.json`. The generator intentionally does not scrape web search results.
+1. 按 `SKILL.md` 准备 product.json / images.json；
+2. 基于 `templates/brochure.html` 手写 brochure.html；
+3. 用宿主环境的浏览器工具渲染目检、打印导出 PDF；
+4. （可选）`pnpm install && node scripts/html-to-pptx.mjs --html brochure.html --output out.pptx`。
 
 ## Scripts
 
-- `scripts/product-brochure.mjs` — entry point for `validate`, `generate`, `sample`, `promote`.
-- `scripts/image-workflow.mjs` — `analyze`, `source-plan`, `manifest`.
-- `scripts/smoke.mjs` — quick health check for required skill assets.
+- `scripts/image-workflow.mjs` — 图片工作流 `analyze` / `source-plan` / `manifest`（零依赖）。
+- `scripts/check.mjs` — 交付前安全检查：内部字段泄露、`【待确认】`、图片来源合规（零依赖）。
+- `scripts/html-to-pptx.mjs` — HTML → PPTX 转换（需要 pptxgenjs）。
+- `scripts/smoke.mjs` — Skill 结构自检（零依赖）。
 
 ## PDF export
 
-PDF conversion is delegated to the host agent by default. Many agent environments ship their own Office/PDF tooling (document skills, WPS, PowerPoint "save as PDF"); prefer those to convert the generated PPTX.
-
-The built-in `scripts/export-pdf.mjs` is only a fallback. It looks for `libreoffice` or `soffice`:
-
-- On Linux/macOS: `libreoffice` or `soffice` in `PATH`.
-- On Windows: `soffice.exe` or `libreoffice.exe` in `PATH`.
-
-If neither is available, the PPTX remains valid and `quality.json` records `PDF_EXPORT_UNAVAILABLE` — a warning, not a failure. Do not install LibreOffice just for this Skill; use the host environment's PDF tooling instead. If the binary is found but export fails, `PDF_EXPORT_FAILED` is recorded.
+PDF 由宿主浏览器工具从 HTML 打印得到（Chromium print-to-PDF）：纸张 A4、纵向、边距"无"、勾选"背景图形"。模板已内置 `@page { size: A4; margin: 0 }` 与 `print-color-adjust: exact`。不依赖 LibreOffice，也不需要为本 Skill 安装任何办公软件。
 
 ## Fonts
 
-The generated PPTX uses `Aptos` and `Aptos Display`. These fonts are available on most modern systems. If they are missing, PowerPoint will substitute a fallback font; the layout is designed to tolerate reasonable substitution.
+模板字体栈：标题 `"Noto Serif SC", "Source Han Serif SC", serif`；正文 `"PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif`。这些栈覆盖了 macOS / Windows / Linux 的常见中文字体；缺字体时浏览器按栈回退，排版设计已容忍合理回退。追求最佳效果可安装思源宋体/思源黑体。

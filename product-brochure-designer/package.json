@@ -1,16 +1,16 @@
 {
   "name": "product-brochure-designer",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {
-    "validate": "node scripts/product-brochure.mjs validate",
-    "generate": "node scripts/product-brochure.mjs generate",
-    "sample": "node scripts/product-brochure.mjs sample",
-    "promote": "node scripts/product-brochure.mjs promote",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "check": "node scripts/check.mjs",
+    "pptx": "node scripts/html-to-pptx.mjs",
+    "images": "node scripts/image-workflow.mjs"
   },
-  "dependencies": {
+  "optionalDependencies": {
     "pptxgenjs": "^3.12.0",
     "yaml": "^2.6.1"
   }

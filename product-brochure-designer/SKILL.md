@@ -1,33 +1,47 @@
 ---
 name: product-brochure-designer
-description: Create polished, editable A4 portrait product handbooks in PPTX and PDF from a structured product brief and approved local images. Use for product brochures, sales handbooks, study-tour handbooks, program catalogs, and client-facing multi-page product introductions in Codex, Claude Code, WorkBuddy, or another agent environment with Node.js.
+description: Create polished, premium A4 portrait product handbooks (HTML master → PDF, optionally PPTX) from a structured product brief and approved local images, using a world-class design knowledge base instead of hardcoded layouts. Use for product brochures, sales handbooks, study-tour handbooks, program catalogs, and client-facing multi-page product introductions in Codex, Claude Code, WorkBuddy, or another agent environment.
 ---
 
-# Product Brochure Designer — AI 执行手册
+# Product Brochure Designer — AI 执行手册（v2）
 
-本 Skill 用于把结构化的产品资料和本地图片，生成可编辑的 A4 竖版 PPTX（并在可用时导出 PDF）。本手册面向任意 AI Agent：按章节顺序执行即可，不要跳过输入检查与质量报告。
+本 Skill 把结构化的产品资料和本地图片，制作成高级、精美、杂志级的 A4 竖版产品手册。
 
-## 1. 快速开始（3 步）
+**v2 工作方式**：设计不再是硬编码的版式引擎，而是**知识驱动**——你（Agent）阅读设计知识库，自己做出设计判断，手写一份 HTML 母版，用浏览器渲染目检，最后导出 PDF（可选 PPTX）。本手册按章节顺序执行即可。
+
+**零依赖**：主线（HTML→PDF）不需要任何 npm 包；只有需要 PPTX 时才 `pnpm install`（pptxgenjs 为可选依赖）。
+
+---
+
+## 0. 交付物与路线
+
+| 交付物 | 来源 | 何时用 |
+|---|---|---|
+| `brochure.html` | 你手写（按第 4 章设计流程） | 母版，唯一事实来源 |
+| PDF | 浏览器打印 brochure.html（宿主浏览器工具/Chromium） | 主交付物 |
+| PPTX | `node scripts/html-to-pptx.mjs` 转换同一 HTML | 客户要求可编辑源文件时 |
+
+不要先写 PPTX 再导 PDF；HTML 是唯一母版，两条输出线都从它派生。
+
+---
+
+## 1. 快速开始（4 步）
 
 ### 第 1 步：准备 `product.json`
 
-复制 `examples/sustech-study-tour/product.json` 并改写。只填写已确认的事实；缺少的关键事实留空，系统会自动标记为 `【待确认】`。
+复制 `examples/sustech-study-tour/product.json` 并改写。只填已确认事实；缺失关键事实留空，渲染时写 `【待确认】`。
 
 ### 第 2 步：准备图片
 
-- 若已有本地图片：按 `images.json` 格式写入清单（见第 2 节）。
-- 若需要收集图片：先运行图片工作流（见第 3 节），优先使用官方公众号/官网图片。
+按第 3 章图片工作流收集官方图片，生成 `images.json`。没有图片也能排版（纯色封面），但质量上限会低很多——至少努力拿到一张官方主图。
 
-### 第 3 步：验证并生成
+### 第 3 步：设计并写 HTML
 
-```bash
-cd product-brochure-designer
-pnpm install
-pnpm validate -- --input /path/to/product.json --images /path/to/images.json
-pnpm generate -- --input /path/to/product.json --images /path/to/images.json --mode sample
-```
+按第 4 章流程：读设计知识 → 选风格方向 → 规划叙事页 → 基于 `templates/brochure.html` 改写每一页。
 
-生成后检查 `output/<产品名>/reports/quality.json` 与 `information-gaps.md`，确认无错误再提升为 delivery。
+### 第 4 步：渲染目检 → 导出
+
+用浏览器渲染每一页截图，按第 5 章清单逐项目检、迭代到通过，然后打印导出 PDF，需要时转 PPTX。
 
 ---
 
@@ -35,225 +49,173 @@ pnpm generate -- --input /path/to/product.json --images /path/to/images.json --m
 
 ### 2.1 `product.json` / `product.yaml`
 
-支持 JSON 或 YAML。顶层字段如下（`name` 必填）：
-
 | 字段 | 类型 | 说明 |
 |---|---|---|
 | `name` | string | 产品名称（必填） |
-| `category` | string | 类别，如 `university`、`technology`、`industrial` 等，用于自动选择预设 |
-| `type` | string | 产品类型，辅助预设选择 |
-| `description` | string | 产品描述（必填，过长会被截断） |
 | `subtitle` / `tagline` | string | 副标题/标语 |
-| `benefits` | array | 核心卖点，最多 5 条，每条可为 `{title, description}` 或字符串 |
+| `category` | string | 类别（university/technology/industrial/culture/ecology…），辅助选风格方向 |
+| `description` | string | 产品描述（必填） |
+| `benefits` | array | 核心卖点，最多 5 条，`{title, description}` 或字符串 |
 | `modules` | array | 内容模块，最多 5 条 |
-| `itinerary` | array | 行程/流程，最多 8 条，每条 `{time, title, description}` |
+| `itinerary` | array | 行程/流程，最多 8 条，`{time, title, description}` |
 | `outcomes` | array | 成果/带走价值，最多 3 条 |
-| `specifications` | object | 规格表，键值对 |
-| `brand` | object | 品牌信息，见下文 |
-| `preset` | string | 显式指定视觉预设，可选 |
-| `variant` | string | 显式指定预设变体，可选 |
-
-`brand` 对象：
-
-| 字段 | 说明 |
-|---|---|
-| `name` | 品牌/机构名称（可留空，系统不会默认填入） |
-| `contact` | 联系方式 |
-| `disclaimer` | 免责声明 |
-| `logo` | logo 图片路径（相对 `product.json` 所在目录） |
-| `colors` | 可覆盖主题颜色：`background`、`ink`、`accent`、`overlay` |
+| `specifications` | object | 规格表键值对 |
+| `brand` | object | `{name, contact, disclaimer, colors}`；`colors` 只覆盖 `background/ink/accent/overlay` 四槽 |
 
 关键限制：
 
-- 字段名匹配 `(成本|分销|渠道|结算|利润|内部|底价|supplier|margin|cost|wholesale|internal)` 的内容会被视为内部数据并剥离。
-- `name`、`description` 为空时会显示为 `【待确认】`。
-- 不要编造价格、成本、渠道、供应商、审批结果、合作方承诺等未经确认的事实。
+- 字段名匹配 `(成本|分销|渠道|结算|利润|内部|底价|supplier|margin|cost|wholesale|internal)` 的内容是内部数据，**必须剥离**，不得出现在手册任何位置。
+- `name`、`description` 缺失时页面写 `【待确认】`；不要编造价格、合作方承诺、审批结果等未确认事实。
 
 ### 2.2 `images.json`
 
-图片清单，每个图片字段如下：
-
 | 字段 | 必填 | 说明 |
 |---|---|---|
-| `id` | 是 | 图片唯一标识 |
+| `id` | 是 | 唯一标识 |
 | `path` | 是 | 相对 `images.json` 所在目录的本地路径 |
-| `role` | 是 | 图片用途：`cover`、`venue`、`detail`、`activity`、`context` 等 |
-| `status` | 是 | `approved` 或 `preview` |
-| `sourceType` | 否 | `official_wechat`、`official_web`、`licensed`、`unknown` 等 |
-| `sourceUrl` | 否 | 原始来源 URL |
-| `rights` | 否 | 授权说明 |
-| `width` / `height` | 否 | 像素尺寸（工作流可自动填写） |
-
-规则：
-
-- `delivery` 模式仅接受 `status === 'approved'` 且 `sourceType` 为 `official_wechat`、`official_web` 或 `licensed` 的图片。
-- 官方公众号/官网图片会被优先用于封面（cover）和主视觉（hero/venue）。
-- 普通网页图片只能作为 `preview`，不能进入 delivery。
+| `role` | 是 | `cover` / `venue` / `detail` / `activity` / `context` |
+| `status` | 是 | `approved`（可交付）/ `preview`（仅样稿） |
+| `sourceType` | 交付必填 | `official_wechat` / `official_web` / `licensed` 可交付；`preview` / `web` / `ai_generated` 仅限样稿 |
 
 ---
 
-## 3. 图片工作流
+## 3. 图片工作流（官方优先）
 
-图片工作流分三阶段，按需执行：
+Skill 不联网抓图，而是为你生成搜图指令，你用宿主环境的浏览器/搜索工具下载：
 
 ```bash
-# 阶段 1：分析需要哪些图片
-node scripts/image-workflow.mjs analyze --product product.json [--plan data/page-plan.json]
+# 阶段 1：分析产品内容需要哪些图、质量标准
+node scripts/image-workflow.mjs analyze --product product.json
 
-# 阶段 2：输出官方来源采集计划
+# 阶段 2：生成搜图计划：官方公众号 → 官网 → 授权图库
 node scripts/image-workflow.mjs source-plan --product product.json
 
-# 阶段 3：把下载目录中的图片登记为 images.json
+# 阶段 3：下载完成后扫描目录，生成 images.json 草稿
 node scripts/image-workflow.mjs manifest --download-dir ./downloads --output images.json
 ```
 
-### 3.1 官方优先原则
-
-1. **官方公众号**（`official_wechat`）：搜索产品名称的官方公众号，查看最近 3–6 个月推文。封面图和文中高清图优先用于封面与 hero。
-2. **官方网站**（`official_web`）：进入官网“新闻中心/图库/关于我们”，选择横版、无水印、高分辨率图片。
-3. **授权图库**（`licensed`）：如 Unsplash、Pexels 等，作为补充。
-4. **普通网页/AI 生成图**：仅能在 `sample` 模式下作为 `preview` 使用，`delivery` 与 `promote` 会拒绝。
-
-### 3.2 质量门槛
-
-- 封面/主视觉宽度建议 ≥ 2400px；细节/场景图宽度建议 ≥ 1800px。
-- 拒绝：水印、大幅文字叠加、低分辨率、无关地点、噪杂人群、过度饱和、拉伸裁剪。
-- 优先横版（landscape）照片；竖版照片仅用于细节展示。
-- 不要在 PPTX 中直接修改原始像素；版式通过 PptxGenJS 的透明叠加层处理。
-
-### 3.3 人工审核
-
-`manifest` 生成的清单默认 `status: preview`、`sourceType: unknown`。采集后必须人工把合适图片标记为 `approved` 并设置正确的 `sourceType`，否则无法进入 delivery。
+- 图片数量不设上限，由内容丰富度动态决定；但每页最多一张主图（见设计知识库 §5.4）。
+- 质量门槛：无水印、无大文字叠加、封面 ≥2400px 宽、真实场景；禁止 AI 生成图冒充真实场地/活动/人物。
+- `manifest` 生成的草稿默认 `status: preview`；交付前必须人工把合格图片标记为 `approved` 并设置正确 `sourceType`。
+- 交付模式（最终 PDF/PPTX）只允许 `approved` 且来源为官方/授权的图片；样稿阶段可用 `preview` 图，但页面上不标注来源差异——由你在报告中说明。
 
 ---
 
-## 4. 生成与验证
+## 4. 设计流程（核心）
 
-### 4.1 命令速查
+> 模板只保证技术机制正确；**设计判断由你做出**。不要机械复制模板页序——按产品内容规划叙事。
 
-```bash
-# 校验输入并输出缺口/图片问题
-pnpm validate -- --input product.json --images images.json
+### 4.1 读设计知识
 
-# 生成 sample（允许 preview 图片）
-pnpm generate -- --input product.json --images images.json --mode sample
+先读两个文件，它们是本 Skill 的设计大脑：
 
-# 生成 delivery（要求图片 approved 且来源合规）
-pnpm generate -- --input product.json --images images.json --mode delivery
+- `references/design-system.md` — 网格、字体排印、色彩、留白、图像、叙事弧、反模式清单
+- `references/style-directions.md` — 5 个风格方向（editorial / swiss / muji / dark-bleed / heritage）
 
-# 使用示例产品快速生成 sample
-pnpm sample
+### 4.2 选风格方向并定设计 Token
 
-# 提升 sample 为 delivery（仅当 quality.json pass 为 true）
-pnpm promote -- --project output/<产品名>
+按 `style-directions.md` 的选择方法定一个方向（拿不准用 editorial），然后推导四个色槽与字体配对，写入 HTML 顶部的 CSS 变量：
+
+```css
+:root {
+  --bg: ...; --ink: ...; --accent: ...; --overlay: ...;
+  --font-title: ...; --font-body: ...; --margin: 14mm~18mm;
+}
 ```
 
-### 4.2 校验阶段
+品牌提供了主色时，以它推导 `--accent`（压暗降饱和），其余槽位围绕它协调。
 
-`validate` 会：
+### 4.3 规划叙事页
 
-1. 规范化 `product.json`，剥离内部字段。
-2. 把缺失的 `name`、`description` 替换为 `【待确认】`。
-3. 生成 `data/page-plan.json`（含 6/8/10 页计划）。
-4. 检查图片是否存在、是否满足当前模式要求。
-5. 输出 `reports/information-gaps.md` 与 `reports/image-sources.json`。
+按设计知识库 §7 的叙事弧，把 product.json 的内容映射到 6/8/10 页计划：封面钩子 → 语境 → 价值 → 展开 → 呼吸页 → 证据 → 高潮 → 行动。**信息量不够就做 6 页，不注水**。
 
-### 4.3 生成阶段
+### 4.4 写 HTML
 
-`generate` 在 `validate` 的基础上：
+复制 `templates/brochure.html` 为工作文件，逐页改写：
 
-1. 加载主题与变体（见 `references/style-presets.md`）。
-2. 为每页选择版式（见 `references/layout-rules.md`）。
-3. 生成 `<产品名>_<mode>.pptx`。
-4. 尝试导出 PDF（见下方说明）。
-5. 生成 `reports/quality.json`。
+- 每页是一个 `<section class="page">`，A4 竖版 210×297mm，溢出裁剪。
+- 模板中的语义 class（`page-cover` / `page-split` / `page-bleed` / `page-timeline` / `page-specs` / `page-closing`）是 **PPTX 转换锚点**——改写内容时保留这些 class；你也可以新增版式，但新增版式不会进入 PPTX 转换。
+- 所有图片 `object-fit: cover`；文字压图必须配渐变遮罩（模板已给出正确写法）。
+- 遵守空间刻度 `{2,4,6,10,16,24,40}mm`；正文 9–10.5pt；每页空白率 ≥35%。
 
-**PDF 导出策略**：PPTX 是唯一核心交付物。PDF 转换优先由你（宿主 Agent）使用自己环境中的 Office/PDF 工具完成（例如宿主自带的 office/pdf 技能、WPS、PowerPoint 另存为 PDF）。内置的 `scripts/export-pdf.mjs` 仅作为兜底：它会尝试调用 LibreOffice/soffice，找不到时在报告中记录 `PDF_EXPORT_UNAVAILABLE` 警告，不影响交付。你不需要为本 Skill 专门安装 LibreOffice——如果你的环境已有 PDF 工具，直接用它转换 PPTX 即可。
+### 4.5 没有图片时
 
-### 4.4 模式差异
-
-| 模式 | preview 图片 | 未 approved 图片 | 无官方来源 | 质量报告 |
-|---|---|---|---|---|
-| `sample` | 允许，记为 WARNING | 允许 | 不报错 | pass 仍为 true（除非致命错误） |
-| `delivery` | 拒绝，记为 ERROR | 拒绝 | 发出 WARNING | 有 ERROR 则 pass=false，退出码 2 |
-
-### 4.5 提升
-
-`promote` 只读取 `reports/quality.json`：
-
-- 若 `pass === true`：输出 `promoted: true`。
-- 若 `pass === false`：抛出 `PROMOTE_BLOCKED`。
+封面与出血页退化为 overlay 纯色 + 大字标题（依然成立）；分栏页改为整页文字版式。在交付报告中明确说明缺图。
 
 ---
 
-## 5. 输出说明
+## 5. 渲染目检与导出
 
-生成目录为 `output/<安全产品名>/`：
+### 5.1 渲染目检（必做，不可跳过）
 
-| 文件/目录 | 说明 |
+用宿主环境的浏览器工具打开 `brochure.html`，逐页截图，对照 `references/design-system.md` §8 反模式清单逐项检查，重点：
+
+1. 文字与图片是否重叠、文字是否可读（遮罩够不够深）
+2. 图片是否变形（宽高比）、是否模糊/廉价
+3. 每页空白率、对齐、间距刻度
+4. 字体是否成功加载（衬线标题是否真的是衬线）
+5. 叙事节奏：密页之后有没有呼吸页
+
+发现问题 → 改 HTML → 重新渲染，直到全部通过。**没有目检过的手册不算完成。**
+
+### 5.2 安全检查（交付前必跑）
+
+```bash
+node scripts/check.mjs --html brochure.html --product product.json --images images.json
+```
+
+检查内部字段泄露（成本/渠道/margin…）、遗留的 `【待确认】`、不合规图片来源。存在 ERROR 时退出码为 2，**不得交付**。
+
+### 5.3 导出 PDF
+
+用宿主浏览器工具的"打印为 PDF"（Chromium print-to-pdf）：
+
+- 纸张 A4、纵向、边距"无"、勾选"背景图形/Background graphics"
+- 模板已内置 `@page { size: A4; margin: 0 }` 与打印色彩修正
+
+### 5.4 导出 PPTX（可选）
+
+```bash
+pnpm install   # 仅此路径需要依赖（pptxgenjs）
+node scripts/html-to-pptx.mjs --html brochure.html --output <产品名>.pptx
+```
+
+转换器按语义 class 锚点把每页映射为可编辑 PPTX 对象（文字可编辑，图片为配图）。转换后抽查 2–3 页确认无错位。
+
+---
+
+## 6. 输出与质量报告
+
+建议在输出目录写一份 `delivery-notes.md`：所选风格方向与色板、页数计划、图片来源清单（official/preview 各几张）、`【待确认】` 项汇总、目检结论。交付时随 PDF 一并给出。
+
+---
+
+## 7. 故障排除
+
+| 问题 | 处理 |
 |---|---|
-| `<产品名>_sample.pptx` / `<产品名>_delivery.pptx` | 可编辑 A4 竖版 PPTX |
-| 同名 `.pdf`（可选） | 当 LibreOffice/soffice 可用时生成 |
-| `data/product.normalized.json` | 规范化后的产品数据 |
-| `data/page-plan.json` | 页面规划（预设、页数、每页类型与图片角色） |
-| `data/image-manifest.json` | 处理后的图片清单 |
-| `data/layout-bounds.json` | 每页版式与可编辑区域记录 |
-| `reports/information-gaps.md` | 缺失事实清单 |
-| `reports/image-sources.json` | 图片来源与问题 |
-| `reports/quality.json` | 质量报告，含 `pass` 与 `issues` |
-
-PPTX 中所有标题、正文、规格、联系方式、免责声明均为可编辑文本；照片仅作为背景或配图。
+| 打印 PDF 颜色/背景丢失 | 打印设置勾选"背景图形"；模板已设 `print-color-adjust: exact` |
+| 页与页之间出现白缝 | 确认 `@page margin: 0`，打印边距设为"无" |
+| 中文字体回退成默认黑体 | 系统缺 Noto Serif SC；接受回退（排版已容忍），或提示用户安装思源宋体 |
+| PPTX 转换后某版式丢失 | 该页用了非模板语义 class 的新版式；改用模板 class 或接受 PDF-only |
+| 图片不够 | 见 4.5；优先补一张 cover 角色官方图 |
 
 ---
 
-## 6. 故障排除
+## 8. 安全规则
 
-### 6.1 没有图片
-
-- 封面和全出血页会退化为纯色叠加背景。
-- 左右分栏页会自动切换为 `listVertical` 版式。
-- 建议：先执行图片工作流，至少提供一张 `role: cover` 的 approved 图片。
-
-### 6.2 图片不合格
-
-常见错误码与处理：
-
-| 错误码 | 含义 | 处理 |
-|---|---|---|
-| `IMAGE_MISSING` | 图片路径不存在或扩展名不对 | 检查 `path` 是否相对 `images.json` 目录；仅支持 `png/jpg/jpeg/webp` |
-| `IMAGE_NOT_APPROVED` | delivery 模式下图片未 approved 或来源不合规 | 把图片 `status` 改为 `approved`，`sourceType` 改为官方或授权类型 |
-| `IMAGE_PREVIEW_ONLY` | sample 模式下的预览图 | 如需交付，替换为 approved 图片 |
-| `OFFICIAL_SOURCE_MISSING` | delivery 没有使用官方来源图片 | 优先从官方公众号/官网获取并登记 |
-
-### 6.3 PDF 不可用
-
-- 错误码 `PDF_EXPORT_UNAVAILABLE`：未检测到 LibreOffice/soffice。**这不是故障**：PPTX 是核心交付物，你可以用宿主环境自带的 Office/PDF 工具（如 office/pdf 技能、WPS、PowerPoint）把 PPTX 转成 PDF，或提醒用户手动另存。
-- 错误码 `PDF_EXPORT_FAILED`：已找到二进制但导出失败。检查文件路径是否过长、PPTX 是否损坏，或改用宿主工具转换。
-
-### 6.4 质量报告未通过
-
-- `INTERNAL_FIELD_LEAK`：产品数据仍含内部字段，检查并删除成本、利润、渠道等字段。
-- `CRITICAL_FACT_MISSING`：`name` 或 `description` 为空，补充后再生成。
-- `DELIVERY_PREVIEW_IMAGE`：delivery 模式下存在 preview 图片，全部替换为 approved。
-
----
-
-## 7. 安全规则
-
-1. **待确认字段**：任何不确定的事实必须显示为 `【待确认】`，不要替用户猜测。
-2. **内部字段**：字段名或内容包含成本、利润、分销、渠道、结算、内部、supplier、margin、cost、wholesale 等会被剥离；不要在对外稿件中保留。
-3. **图片合规**：
-   - delivery 禁止使用 `preview`、`web`、`ai_generated` 图片。
-   - 不得用 AI 生成图代表真实场馆、工厂、客户活动、产品或人物。
-4. **人工复核**：sample 生成后必须检查 `information-gaps.md`、`image-sources.json`、`quality.json` 后再决定是否可以 promote。
-5. **免责声明**：涉及预约、审批、价格、入校、体验项目等可能变动的事项，应写入 `brand.disclaimer` 或 specifications 中注明“以最终确认/现场安排为准”。
+1. 任何不确定的事实显示为 `【待确认】`，不替用户猜测。
+2. 成本、利润、渠道、结算、供应商等内部字段必须剥离，不得出现在任何页面。
+3. 交付稿禁止 `preview` / `web` / `ai_generated` 图片；禁止用 AI 生成图代表真实场馆、产品、活动或人物。
+4. 涉及价格、预约、审批、体验项目等可能变动的事项，在尾页或规格页注明"以最终确认/现场安排为准"。
+5. 交付前必须完成第 5.1 节目检并在交付说明中记录。
 
 ---
 
 ## 参考文档
 
+- `references/design-system.md` — 设计系统知识库（先读）
+- `references/style-directions.md` — 5 个风格方向
 - `references/fact-policy.md` — 事实与资料缺口策略
 - `references/image-policy.md` — 图片来源、审核与禁止项
-- `references/layout-rules.md` — A4 版式、安全边距与 6 种版式模式
-- `references/style-presets.md` — 6 套视觉预设与变体
-- `references/platform-notes.md` — Node、PptxGenJS、LibreOffice 等平台注意事项
+- `templates/brochure.html` — A4 技术机制参考模板（含语义锚点说明）

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!--
+  示例成品：南方科技大学科创研学 · 10 页手册（editorial 方向）
+  ─────────────────────────────────────────────
+  本文件演示按 SKILL.md v2 流程填写的完整手册：
+  - 叙事弧：封面钩子 → 介绍 → 价值 → 模块 → 行程 → 呼吸页 → 规格 → 成果 → 高潮 → 行动
+  - 未包含真实照片：图片位置用渐变占位块（.photo-ph）演示结构；
+    真实任务中替换为 <img class="photo" src="..."> 即可（官方图片优先）。
+  - 缺失事实一律显示【待确认】。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>南方科技大学科创研学 · 产品手册</title>
+<style>
+  :root {
+    --bg: #F4F6F8;
+    --ink: #152231;
+    --accent: #2D6CDF;
+    --overlay: #102A43;
+    --paper: #FFFFFF;
+    --font-title: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+    --font-body: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
+    --margin: 18mm;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { page-break-after: always; break-after: page; }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+  }
+
+  body { background: #888; font-family: var(--font-body); color: var(--ink); }
+
+  .page {
+    position: relative;
+    width: 210mm; height: 297mm;
+    margin: 8mm auto;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  /* 打印时去除屏幕预览间距（必须在 .page 规则之后，否则被覆盖） */
+  @media print { .page { margin: 0; } }
+
+  .label {
+    font-size: 8pt; font-weight: 700; letter-spacing: 2.5px;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .page-title {
+    font-family: var(--font-title); font-weight: 700;
+    font-size: 24pt; line-height: 1.25; margin-top: 4mm;
+  }
+  .body-text { font-size: 10.5pt; line-height: 1.85; }
+  .footer {
+    position: absolute; left: var(--margin); right: var(--margin); bottom: 10mm;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 0.4pt solid var(--ink); padding-top: 2.5mm;
+    font-size: 7.5pt; opacity: 0.65;
+  }
+
+  /* 占位图片块（示例专用；真实任务替换为 <img class="photo">） */
+  .photo-ph { width: 100%; height: 100%; }
+  .ph-1 { background: linear-gradient(160deg, #2D6CDF 0%, #102A43 70%); }
+  .ph-2 { background: linear-gradient(200deg, #3E7A5E 0%, #102A43 75%); }
+  .ph-3 { background: linear-gradient(180deg, #486581 0%, #102A43 80%); }
+
+  /* 封面 */
+  .page-cover { background: var(--overlay); color: #fff; }
+  .page-cover .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .page-cover .shade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(16,42,67,0.25) 0%, rgba(16,42,67,0.55) 55%, rgba(16,42,67,0.92) 100%);
+  }
+  .page-cover .cover-body { position: absolute; left: var(--margin); right: var(--margin); bottom: 16mm; }
+  .page-cover .cover-title { font-family: var(--font-title); font-size: 34pt; font-weight: 700; line-height: 1.2; margin: 5mm 0 3mm; }
+  .page-cover .cover-sub { font-size: 12pt; opacity: 0.92; }
+  .page-cover .cover-meta { font-size: 7.5pt; letter-spacing: 2px; opacity: 0.7; margin-top: 10mm; }
+
+  /* 分栏 */
+  .page-split { display: grid; }
+  .page-split.photo-left  { grid-template-columns: 40% 60%; }
+  .page-split.photo-right { grid-template-columns: 60% 40%; }
+  .page-split .photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .page-split .photo-wrap { position: relative; }
+  .page-split .photo-wrap::after {
+    content: ""; position: absolute; inset: 0;
+    background: var(--overlay); opacity: 0.14;
+  }
+  .page-split .text { padding: 16mm 12mm 24mm; display: flex; flex-direction: column; }
+  .page-split.photo-left  .text { order: 2; }
+  .page-split.photo-left  .photo-wrap { order: 1; }
+
+  .num-item { display: grid; grid-template-columns: 14mm 1fr; gap: 5mm; margin-top: 9mm; }
+  .num-item .num { font-family: var(--font-title); font-size: 22pt; font-weight: 700; color: var(--accent); line-height: 1; }
+  .num-item h3 { font-size: 11.5pt; margin-bottom: 1.5mm; }
+  .num-item p { font-size: 9.5pt; line-height: 1.7; opacity: 0.82; }
+
+  /* 呼吸页（浅色大留白声明页：密页之后的停顿） */
+  .page-breath { display: flex; align-items: flex-end; }
+  .page-breath .breath-body { padding: 0 var(--margin) 60mm; }
+  .page-breath .breath-title { font-family: var(--font-title); font-size: 27pt; font-weight: 700; line-height: 1.5; max-width: 150mm; }
+  .page-breath .breath-text { font-size: 10.5pt; line-height: 1.9; margin-top: 8mm; max-width: 120mm; opacity: 0.8; }
+
+  /* 全出血故事页 */
+  .page-bleed { color: #fff; background: var(--overlay); }
+  .page-bleed .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .page-bleed .shade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(16,42,67,0.45) 0%, rgba(16,42,67,0.62) 100%);
+  }
+  .page-bleed .bleed-body { position: absolute; left: var(--margin); right: var(--margin); top: 42%; }
+  .page-bleed .bleed-title { font-family: var(--font-title); font-size: 27pt; font-weight: 700; line-height: 1.35; max-width: 150mm; }
+  .page-bleed .bleed-text { font-size: 11pt; line-height: 1.9; margin-top: 6mm; max-width: 128mm; opacity: 0.95; }
+
+  /* 时间轴 */
+  .page-timeline header { padding: 16mm var(--margin) 0; }
+  .page-timeline .tl { margin: 10mm var(--margin) 0; padding-left: 12mm; border-left: 1.2pt solid var(--accent); }
+  .page-timeline .tl-item { position: relative; margin-bottom: 8mm; }
+  .page-timeline .tl-item::before {
+    content: ""; position: absolute; left: -15.2mm; top: 1.6mm;
+    width: 4.4mm; height: 4.4mm; border-radius: 50%; background: var(--accent);
+  }
+  .page-timeline .tl-time { font-size: 9.5pt; font-weight: 700; color: var(--accent); }
+  .page-timeline .tl-title { font-size: 11.5pt; font-weight: 700; margin: 1mm 0; }
+  .page-timeline .tl-desc { font-size: 9.5pt; line-height: 1.7; opacity: 0.82; }
+
+  /* 规格 */
+  .page-specs header { padding: 16mm var(--margin) 0; }
+  .page-specs .spec-grid {
+    margin: 10mm var(--margin) 0;
+    display: grid; grid-template-columns: 1fr 1fr; column-gap: 12mm;
+  }
+  .page-specs .spec { padding: 4.5mm 0; border-bottom: 0.4pt solid var(--ink); }
+  .page-specs .spec dt { font-size: 8.5pt; font-weight: 700; color: var(--accent); margin-bottom: 1.2mm; }
+  .page-specs .spec dd { font-size: 10.5pt; line-height: 1.6; }
+
+  /* 尾页 */
+  .page-closing { background: var(--overlay); color: #fff; }
+  .page-closing .closing-body { position: absolute; left: var(--margin); right: var(--margin); top: 20%; }
+  .page-closing .closing-title { font-family: var(--font-title); font-size: 26pt; font-weight: 700; line-height: 1.35; max-width: 150mm; }
+  .page-closing .contact { position: absolute; left: var(--margin); bottom: 30mm; font-size: 11pt; line-height: 2; }
+  .page-closing .disclaimer { position: absolute; left: var(--margin); right: var(--margin); bottom: 14mm; font-size: 7.5pt; opacity: 0.65; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- 01 · 封面（钩子）：无真实照片，overlay 纯色 + 大标题 -->
+<section class="page page-cover">
+  <div class="shade"></div>
+  <div class="cover-body">
+    <div class="label">高校研学 · PRODUCT HANDBOOK</div>
+    <h1 class="cover-title">南方科技大学<br>科创研学</h1>
+    <div class="cover-sub">走进高校科创场景，开启半日科技探索</div>
+    <div class="cover-meta">01 / A4 PRODUCT HANDBOOK</div>
+  </div>
+</section>
+
+<!-- 02 · 语境（介绍） -->
+<section class="page page-split photo-left">
+  <div class="photo-wrap"><div class="photo-ph ph-1"></div></div>
+  <div class="text">
+    <div class="label">INTRODUCTION</div>
+    <h2 class="page-title">走进真实的高校<br>科创现场</h2>
+    <p class="body-text" style="margin-top:6mm">走进南方科技大学开展科普研学，包含高校校园参观、主题讲座或科普讲座，以及科技体验。</p>
+    <p class="body-text" style="margin-top:4mm">半日的行程里，学生在真实校园环境中观察、提问与交流，建立对大学与科技方向的直观认识。实际开放区域、讲座主题和体验项目以最终预约确认及现场安排为准。</p>
+  </div>
+  <div class="footer"><span>南方科技大学科创研学</span><span>02</span></div>
+</section>
+
+<!-- 03 · 价值 -->
+<section class="page page-split photo-right">
+  <div class="text">
+    <div class="label">KEY VALUE</div>
+    <h2 class="page-title">半日研学，四重收获</h2>
+    <div class="num-item"><div class="num">01</div><div><h3>走进高校</h3><p>感受大学校园环境与学习氛围，建立对高校生活的直观认识。</p></div></div>
+    <div class="num-item"><div class="num">02</div><div><h3>接触科技</h3><p>通过主题讲座或科普内容，了解人工智能、机器人、3D 打印等科技方向。</p></div></div>
+    <div class="num-item"><div class="num">03</div><div><h3>激发兴趣</h3><p>在真实场景中观察、提问和交流，发现科技与现实生活的联系。</p></div></div>
+    <div class="num-item"><div class="num">04</div><div><h3>打开视野</h3><p>初步认识科技行业、大学专业和未来探索的可能性。</p></div></div>
+  </div>
+  <div class="photo-wrap"><div class="photo-ph ph-2"></div></div>
+  <div class="footer"><span>南方科技大学科创研学</span><span>03</span></div>
+</section>
+
+<!-- 04 · 模块 -->
+<section class="page page-split photo-left">
+  <div class="photo-wrap"><div class="photo-ph ph-3"></div></div>
+  <div class="text">
+    <div class="label">MODULES</div>
+    <h2 class="page-title">三个环节，<br>构成完整半日</h2>
+    <div class="num-item"><div class="num">01</div><div><h3>校园参观</h3><p>走进校园公共空间，感受高校环境与学术气质。具体参观区域以最终安排为准。</p></div></div>
+    <div class="num-item"><div class="num">02</div><div><h3>主题讲座</h3><p>围绕科技创新或相关科普主题开展学习。讲座主题与讲师安排【待确认】。</p></div></div>
+    <div class="num-item"><div class="num">03</div><div><h3>科技体验</h3><p>可参考仿生机器狗、人工智能、3D 打印等科技内容，具体体验形式以实际安排为准。</p></div></div>
+  </div>
+  <div class="footer"><span>南方科技大学科创研学</span><span>04</span></div>
+</section>
+
+<!-- 05 · 行程（时间轴） -->
+<section class="page page-timeline">
+  <header>
+    <div class="label">SCHEDULE</div>
+    <h2 class="page-title">半日行程</h2>
+  </header>
+  <div class="tl">
+    <div class="tl-item"><div class="tl-time">集合</div><div class="tl-title">签到与活动说明</div><div class="tl-desc">集合地点与入校流程【待确认】。</div></div>
+    <div class="tl-item"><div class="tl-time">参观</div><div class="tl-title">校园环境参观</div><div class="tl-desc">具体开放区域以最终预约确认和现场安排为准。</div></div>
+    <div class="tl-item"><div class="tl-time">学习</div><div class="tl-title">主题讲座或科普讲座</div><div class="tl-desc">主题、时长与讲师安排【待确认】。</div></div>
+    <div class="tl-item"><div class="tl-time">体验</div><div class="tl-title">科技体验与交流</div><div class="tl-desc">具体体验项目【待确认】。</div></div>
+    <div class="tl-item"><div class="tl-time">总结</div><div class="tl-title">总结分享</div><div class="tl-desc">活动结束时间以最终安排为准。</div></div>
+  </div>
+  <div class="footer"><span>实际流程以最终确认与现场安排为准。</span><span>05</span></div>
+</section>
+
+<!-- 06 · 呼吸页（浅色大留白：密页之后的停顿）——自定义版式，仅 PDF -->
+<section class="page page-breath">
+  <div class="breath-body">
+    <div class="breath-title">科技不是课本上的名词，<br>而是可以走进的现场。</div>
+    <p class="breath-text">当学生站在真实的实验室与校园之间，提问便自然发生。</p>
+  </div>
+  <div class="footer"><span>南方科技大学科创研学</span><span>06</span></div>
+</section>
+
+<!-- 07 · 规格 -->
+<section class="page page-specs">
+  <header>
+    <div class="label">PRODUCT FACTS</div>
+    <h2 class="page-title">产品规格</h2>
+  </header>
+  <dl class="spec-grid">
+    <div class="spec"><dt>活动时长</dt><dd>0.5 天</dd></div>
+    <div class="spec"><dt>成团人数</dt><dd>30 人</dd></div>
+    <div class="spec"><dt>用餐安排</dt><dd>25 元/人</dd></div>
+    <div class="spec"><dt>住宿安排</dt><dd>无</dd></div>
+    <div class="spec"><dt>适用年级</dt><dd>【待确认】</dd></div>
+    <div class="spec"><dt>入校要求</dt><dd>【待确认】</dd></div>
+    <div class="spec"><dt>预约周期</dt><dd>【待确认】</dd></div>
+    <div class="spec"><dt>费用包含</dt><dd>【待确认】</dd></div>
+  </dl>
+  <div class="footer"><span>南方科技大学科创研学</span><span>07</span></div>
+</section>
+
+<!-- 08 · 成果 -->
+<section class="page page-split photo-right">
+  <div class="text">
+    <div class="label">OUTCOMES</div>
+    <h2 class="page-title">带走的不只是照片</h2>
+    <div class="num-item"><div class="num">01</div><div><h3>认识</h3><p>认识高校科技环境与相关应用。</p></div></div>
+    <div class="num-item"><div class="num">02</div><div><h3>探究</h3><p>在观察、提问与交流中形成探究意识。</p></div></div>
+    <div class="num-item"><div class="num">03</div><div><h3>方向</h3><p>建立对大学、科技与未来方向的初步认知。</p></div></div>
+  </div>
+  <div class="photo-wrap"><div class="photo-ph ph-1"></div></div>
+  <div class="footer"><span>南方科技大学科创研学</span><span>08</span></div>
+</section>
+
+<!-- 09 · 高潮（全出血声明页） -->
+<section class="page page-bleed">
+  <div class="shade"></div>
+  <div class="bleed-body">
+    <div class="bleed-title">一次走进高校的半日，<br>可能是一颗种子的开始。</div>
+    <p class="bleed-text">我们相信，真实的现场比任何描述都更有说服力。</p>
+  </div>
+</section>
+
+<!-- 10 · 行动（尾页） -->
+<section class="page page-closing">
+  <div class="closing-body">
+    <div class="closing-title">让一次了解，<br>成为下一步探索的开始。</div>
+  </div>
+  <div class="contact">咨询方式<br>【待确认】</div>
+  <div class="disclaimer">实际参观内容、讲座安排、科技体验项目及入校流程，以最终预约确认和现场安排为准。</div>
+</section>
+
+</body>
+</html>

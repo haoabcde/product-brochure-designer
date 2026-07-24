@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!--
+  product-brochure-designer · A4 技术机制参考模板（v2）
+  ─────────────────────────────────────────────
+  本文件演示的是【技术机制】，不是【版式库】。设计判断请依据：
+    references/design-system.md（网格/字体/色彩/留白/图像/叙事）
+    references/style-directions.md（5 个风格方向）
+  页序与页面组合只是示例——按产品内容规划叙事弧后自由增删。
+
+  用法（AI 按 SKILL.md 执行）：
+  1. 复制本文件为 brochure.html，按 product.json 内容改写每一页。
+  2. 在 <style> 顶部的 CSS 变量中填入你推导的设计 Token（四色槽 + 字体 + 边距）。
+  3. 每页是一个 <section class="page">，A4 竖版 210mm × 297mm；全书 6/8/10 页。
+  4. 图片用本地相对路径；全部 object-fit: cover 等比裁切，绝不变形。
+  5. 文字区与图片区由 grid/flex 分隔，结构上不可能重叠；文字压图时必用渐变遮罩。
+  6. 语义 class（page-cover / page-split / page-bleed / page-timeline / page-specs / page-closing）
+     是 html-to-pptx 转换锚点：保留这些 class 的页面可转 PPTX；自创新版式仅 PDF 可用。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>{{产品名}} · 产品手册</title>
+<style>
+  /* ── 设计 Token：按预设替换以下变量（此处为 editorial / light） ── */
+  :root {
+    --bg: #F4F6F8;          /* 页面底色 */
+    --ink: #152231;         /* 主文字色 */
+    --accent: #2D6CDF;      /* 强调色（标签、序号、时间轴） */
+    --overlay: #102A43;     /* 遮罩/深色页底色 */
+    --paper: #FFFFFF;       /* 卡片/浅区块 */
+    --font-title: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+    --font-body: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Hiragino Sans GB", sans-serif;
+    --margin: 18mm;         /* 安全边距（14–18mm） */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { page-break-after: always; break-after: page; }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+  }
+
+  body { background: #888; font-family: var(--font-body); color: var(--ink); }
+
+  .page {
+    position: relative;
+    width: 210mm; height: 297mm;
+    margin: 8mm auto;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  @media print { .page { margin: 0; } }
+
+  /* ── 通用元素 ── */
+  .label {
+    font-size: 8pt; font-weight: 700; letter-spacing: 2.5px;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .page-title {
+    font-family: var(--font-title); font-weight: 700;
+    font-size: 24pt; line-height: 1.25; margin-top: 4mm;
+  }
+  .body-text { font-size: 10.5pt; line-height: 1.85; }
+  .footnote { font-size: 8pt; opacity: 0.72; }
+  .footer {
+    position: absolute; left: var(--margin); right: var(--margin); bottom: 10mm;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 0.4pt solid var(--ink); padding-top: 2.5mm;
+    font-size: 7.5pt; opacity: 0.65;
+  }
+
+  /* ── 版式 1：封面（全出血 + 渐变遮罩 + 底部标题） ── */
+  .page-cover { background: var(--overlay); color: #fff; }
+  .page-cover .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .page-cover .shade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(16,42,67,0.25) 0%, rgba(16,42,67,0.55) 55%, rgba(16,42,67,0.92) 100%);
+  }
+  .page-cover .cover-body { position: absolute; left: var(--margin); right: var(--margin); bottom: 16mm; }
+  .page-cover .cover-title { font-family: var(--font-title); font-size: 34pt; font-weight: 700; line-height: 1.2; margin: 5mm 0 3mm; }
+  .page-cover .cover-sub { font-size: 12pt; opacity: 0.92; }
+  .page-cover .cover-meta { font-size: 7.5pt; letter-spacing: 2px; opacity: 0.7; margin-top: 10mm; }
+
+  /* ── 版式 2：左右分栏（图片栏 + 文字栏，grid 分区，结构防重叠） ── */
+  .page-split { display: grid; }
+  .page-split.photo-left  { grid-template-columns: 40% 60%; }
+  .page-split.photo-right { grid-template-columns: 60% 40%; }
+  .page-split .photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .page-split .photo-wrap { position: relative; }
+  .page-split .photo-wrap::after {
+    content: ""; position: absolute; inset: 0;
+    background: var(--overlay); opacity: 0.14;   /* 统一压色，提气质 */
+  }
+  .page-split .text { padding: 16mm 12mm 24mm; display: flex; flex-direction: column; }
+  .page-split.photo-left  .text { order: 2; }
+  .page-split.photo-left  .photo-wrap { order: 1; }
+
+  /* 序号列表（分栏页内的价值点/成果） */
+  .num-item { display: grid; grid-template-columns: 14mm 1fr; gap: 5mm; margin-top: 9mm; }
+  .num-item .num { font-family: var(--font-title); font-size: 22pt; font-weight: 700; color: var(--accent); line-height: 1; }
+  .num-item h3 { font-size: 11.5pt; margin-bottom: 1.5mm; }
+  .num-item p { font-size: 9.5pt; line-height: 1.7; opacity: 0.82; }
+
+  /* ── 版式 3：全出血故事页（图 + 渐变遮罩 + 声明文字） ── */
+  .page-bleed { color: #fff; }
+  .page-bleed .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .page-bleed .shade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(16,42,67,0.45) 0%, rgba(16,42,67,0.62) 100%);
+  }
+  .page-bleed .bleed-body { position: absolute; left: var(--margin); right: var(--margin); top: 42%; }
+  .page-bleed .bleed-title { font-family: var(--font-title); font-size: 27pt; font-weight: 700; line-height: 1.35; max-width: 150mm; }
+  .page-bleed .bleed-text { font-size: 11pt; line-height: 1.9; margin-top: 6mm; max-width: 128mm; opacity: 0.95; }
+
+  /* ── 版式 4：时间轴（行程） ── */
+  .page-timeline .tl { margin: 10mm var(--margin) 0; padding-left: 12mm; border-left: 1.2pt solid var(--accent); }
+  .page-timeline .tl-item { position: relative; margin-bottom: 8mm; }
+  .page-timeline .tl-item::before {
+    content: ""; position: absolute; left: -15.2mm; top: 1.6mm;
+    width: 4.4mm; height: 4.4mm; border-radius: 50%; background: var(--accent);
+  }
+  .page-timeline .tl-time { font-size: 9.5pt; font-weight: 700; color: var(--accent); }
+  .page-timeline .tl-title { font-size: 11.5pt; font-weight: 700; margin: 1mm 0; }
+  .page-timeline .tl-desc { font-size: 9.5pt; line-height: 1.7; opacity: 0.82; }
+  .page-timeline header { padding: 16mm var(--margin) 0; }
+
+  /* ── 版式 5：规格网格（两列事实表） ── */
+  .page-specs header { padding: 16mm var(--margin) 0; }
+  .page-specs .spec-grid {
+    margin: 10mm var(--margin) 0;
+    display: grid; grid-template-columns: 1fr 1fr; column-gap: 12mm;
+  }
+  .page-specs .spec { padding: 4.5mm 0; border-bottom: 0.4pt solid var(--ink); }
+  .page-specs .spec dt { font-size: 8.5pt; font-weight: 700; color: var(--accent); margin-bottom: 1.2mm; }
+  .page-specs .spec dd { font-size: 10.5pt; line-height: 1.6; }
+
+  /* ── 版式 6：尾页（深色 + 联系方式） ── */
+  .page-closing { background: var(--overlay); color: #fff; }
+  .page-closing .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
+  .page-closing .closing-body { position: absolute; left: var(--margin); right: var(--margin); top: 20%; }
+  .page-closing .closing-title { font-family: var(--font-title); font-size: 26pt; font-weight: 700; line-height: 1.35; max-width: 150mm; }
+  .page-closing .contact { position: absolute; left: var(--margin); bottom: 30mm; font-size: 11pt; line-height: 2; }
+  .page-closing .disclaimer { position: absolute; left: var(--margin); right: var(--margin); bottom: 14mm; font-size: 7.5pt; opacity: 0.65; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- 第 1 页 · 封面 -->
+<section class="page page-cover">
+  <img class="photo" src="images/cover.jpg" alt="">
+  <div class="shade"></div>
+  <div class="cover-body">
+    <div class="label">{{类别 · PRODUCT HANDBOOK}}</div>
+    <h1 class="cover-title">{{产品名}}</h1>
+    <div class="cover-sub">{{副标题}}</div>
+    <div class="cover-meta">01 / A4 PRODUCT HANDBOOK</div>
+  </div>
+</section>
+
+<!-- 第 2 页 · 介绍（左图右文） -->
+<section class="page page-split photo-left">
+  <div class="photo-wrap"><img class="photo" src="images/venue.jpg" alt=""></div>
+  <div class="text">
+    <div class="label">INTRODUCTION</div>
+    <h2 class="page-title">{{介绍页标题}}</h2>
+    <p class="body-text" style="margin-top:6mm">{{产品描述，250–350 字。只写已确认事实，缺失写【待确认】。}}</p>
+  </div>
+  <div class="footer"><span>{{品牌名}}</span><span>02</span></div>
+</section>
+
+<!-- 第 3 页 · 价值（右图左文 + 序号列表） -->
+<section class="page page-split photo-right">
+  <div class="text">
+    <div class="label">KEY VALUE</div>
+    <h2 class="page-title">{{价值页标题}}</h2>
+    <div class="num-item"><div class="num">01</div><div><h3>{{亮点一}}</h3><p>{{说明}}</p></div></div>
+    <div class="num-item"><div class="num">02</div><div><h3>{{亮点二}}</h3><p>{{说明}}</p></div></div>
+    <div class="num-item"><div class="num">03</div><div><h3>{{亮点三}}</h3><p>{{说明}}</p></div></div>
+  </div>
+  <div class="photo-wrap"><img class="photo" src="images/detail.png" alt=""></div>
+  <div class="footer"><span>{{品牌名}}</span><span>03</span></div>
+</section>
+
+<!-- 第 6 页 · 故事（全出血） -->
+<section class="page page-bleed">
+  <img class="photo" src="images/cover.jpg" alt="">
+  <div class="shade"></div>
+  <div class="bleed-body">
+    <div class="bleed-title">{{故事页标题：一句有张力的话}}</div>
+    <p class="bleed-text">{{故事正文，120–180 字}}</p>
+  </div>
+</section>
+
+<!-- 第 7 页 · 行程（时间轴） -->
+<section class="page page-timeline">
+  <header>
+    <div class="label">SCHEDULE</div>
+    <h2 class="page-title">{{行程页标题}}</h2>
+  </header>
+  <div class="tl">
+    <div class="tl-item"><div class="tl-time">{{时间}}</div><div class="tl-title">{{环节一}}</div><div class="tl-desc">{{说明}}</div></div>
+    <div class="tl-item"><div class="tl-time">{{时间}}</div><div class="tl-title">{{环节二}}</div><div class="tl-desc">{{说明}}</div></div>
+    <div class="tl-item"><div class="tl-time">{{时间}}</div><div class="tl-title">{{环节三}}</div><div class="tl-desc">{{说明}}</div></div>
+  </div>
+  <div class="footer"><span>实际流程以最终确认与现场安排为准。</span><span>07</span></div>
+</section>
+
+<!-- 第 9 页 · 规格（两列网格） -->
+<section class="page page-specs">
+  <header>
+    <div class="label">PRODUCT FACTS</div>
+    <h2 class="page-title">{{规格页标题}}</h2>
+  </header>
+  <dl class="spec-grid">
+    <div class="spec"><dt>{{字段}}</dt><dd>{{值}}</dd></div>
+    <div class="spec"><dt>{{字段}}</dt><dd>{{值}}</dd></div>
+    <div class="spec"><dt>{{字段}}</dt><dd>{{值}}</dd></div>
+    <div class="spec"><dt>{{字段}}</dt><dd>{{值}}</dd></div>
+  </dl>
+  <div class="footer"><span>{{品牌名}}</span><span>09</span></div>
+</section>
+
+<!-- 第 10 页 · 尾页 -->
+<section class="page page-closing">
+  <img class="photo" src="images/cover.jpg" alt="">
+  <div class="closing-body">
+    <div class="closing-title">{{结束语：让一次了解，成为下一步探索的开始。}}</div>
+  </div>
+  <div class="contact">咨询方式<br>{{联系方式 · 缺失写【待确认】}}</div>
+  <div class="disclaimer">{{免责声明}}</div>
+</section>
+
+</body>
+</html>

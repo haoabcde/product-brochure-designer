@@ -1,4 +1,4 @@
 interface:
   display_name: "产品手册设计师"
-  short_description: "Create polished editable product handbook PPTX files"
-  default_prompt: "Use $product-brochure-designer to create an editable A4 product handbook from my product brief and images."
+  short_description: "Create premium A4 product handbooks (HTML master to PDF, optional PPTX) from a product brief and official images"
+  default_prompt: "Use $product-brochure-designer to create a beautiful A4 product handbook from my product brief and images."
