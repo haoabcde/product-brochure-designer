@@ -4,7 +4,7 @@
   ─────────────────────────────────────────────
   本文件演示按 SKILL.md v2 流程填写的完整手册，重点是【构图多样性】
   （design-system.md §7.3）：10 页 10 种构图，相邻页结构不重复。
-    01 封面(出血式) → 02 上下结构 → 03 横带条目 → 04 左右分栏 →
+    01 封面(出血式) → 02 内嵌画廊 → 03 横带条目 → 04 左右分栏 →
     05 时间轴 → 06 大留白声明 → 07 规格表 → 08 大数字/大字 →
     09 全出血高潮 → 10 尾页
   未包含真实照片：02/04 页图片位置用低饱和渐变占位块（.photo-ph）演示结构，
@@ -85,12 +85,13 @@
   .page-cover .cover-sub { font-size: 12pt; opacity: 0.92; }
   .page-cover .cover-meta { font-size: 7.5pt; letter-spacing: 2px; opacity: 0.7; margin-top: 10mm; }
 
-  /* 构图 2 · 上下结构（顶部图带 + 下部文字） */
-  .page-topband .band { height: 42%; position: relative; }
-  .page-topband .band .photo { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .page-topband .band::after { content: ""; position: absolute; inset: 0; background: var(--overlay); opacity: 0.14; }
-  .page-topband .text { padding: 16mm var(--margin) 0; max-width: 150mm; }
-  .page-topband .text .body-text + .body-text { margin-top: 4mm; }
+  /* 构图 2 · 内嵌画廊（图收在边距内 + 图注 + 下部文字） */
+  .page-gallery .frame { margin: 16mm var(--margin) 0; height: 42%; position: relative; }
+  .page-gallery .frame .photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .page-gallery .frame::after { content: ""; position: absolute; inset: 0; background: var(--overlay); opacity: 0.14; }
+  .page-gallery .caption { margin: 2.5mm var(--margin) 0; font-size: 7.5pt; opacity: 0.6; }
+  .page-gallery .text { padding: 10mm var(--margin) 0; max-width: 150mm; }
+  .page-gallery .text .body-text + .body-text { margin-top: 4mm; }
 
   /* 构图 3 · 横带条目（大序号 + 通栏行） */
   .page-bands header { padding: 16mm var(--margin) 0; }
@@ -195,9 +196,10 @@
   </div>
 </section>
 
-<!-- 02 · 语境：上下结构（顶部图带 + 下部文字）——自定义版式，仅 PDF -->
-<section class="page page-topband">
-  <div class="band"><div class="photo-ph ph-1"></div></div>
+<!-- 02 · 语境：内嵌画廊（图收边距内 + 图注 + 下部文字）——自定义版式，仅 PDF -->
+<section class="page page-gallery">
+  <div class="frame"><div class="photo-ph ph-1"></div></div>
+  <div class="caption">校园环境（示意占位，正式稿替换为官方照片）</div>
   <div class="text">
     <div class="label">INTRODUCTION</div>
     <h2 class="page-title">走进真实的高校科创现场</h2>
