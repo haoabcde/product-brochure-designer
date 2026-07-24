@@ -31,3 +31,12 @@ PDF 由宿主浏览器工具从 HTML 打印得到（Chromium print-to-PDF）：�
 ## Fonts
 
 模板字体栈：标题 `"Noto Serif SC", "Source Han Serif SC", serif`；正文 `"PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif`。这些栈覆盖了 macOS / Windows / Linux 的常见中文字体；缺字体时浏览器按栈回退，排版设计已容忍合理回退。追求最佳效果可安装思源宋体/思源黑体。
+
+## Print production（送印刷厂时）
+
+办公室打印无需额外处理；送印刷厂装订时注意：
+
+- **装订边**：骑马钉/胶装会吃掉内侧 3–6mm。偶数页左侧、奇数页右侧的安全边距额外 +5mm（调整 `--margin` 或对 `.page:nth-child(even/odd)` 单独设置）。
+- **跨页**：本模板每页独立（无跨页设计元素），天然安全；不要自行添加跨页图片或文字。
+- **色彩**：浏览器输出 RGB；印刷厂要求 CMYK 时，让对方做色彩转换，或在打样时重点核对 accent 与 overlay 两个深色（RGB 藏青转 CMYK 容易偏灰）。
+- **纸张建议**：封面 200–250g 哑粉/特种纸，内页 128–157g 哑粉；哑光纸比光面铜版纸更显高级。

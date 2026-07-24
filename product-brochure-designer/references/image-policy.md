@@ -33,3 +33,9 @@ The following are rejected in `delivery` mode and by `promote`:
 ## Manifest and approval
 
 `node scripts/image-workflow.mjs manifest` creates a draft `images.json` with `status: preview` and `sourceType: unknown`. Review each image, set `status: approved` and the correct `sourceType`, before running delivery.
+
+## People and portrait rights
+
+- **未成年人（青少年/学生）**：未取得监护人书面授权，不得使用正脸清晰可辨的照片。优先选择：背影、侧脸、远景群体、戴口罩场景、官方已公开发布的活动图（官方公众号/官网已发布的图通常已处理授权，但仍优先非正脸构图）。
+- 成年人正脸特写同样需要授权；客户提供的素材需与客户确认授权范围。
+- 人物照片数量克制：一本手册 1–3 张有人物的照片即可，场景与细节照片为主。

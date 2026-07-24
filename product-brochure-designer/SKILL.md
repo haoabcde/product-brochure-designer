@@ -53,7 +53,8 @@ description: Create polished, premium A4 portrait product handbooks (HTML master
 |---|---|---|
 | `name` | string | 产品名称（必填） |
 | `subtitle` / `tagline` | string | 副标题/标语 |
-| `category` | string | 类别（university/technology/industrial/culture/ecology…），辅助选风格方向 |
+| `audience` | string | **目标读者**（如"企业客户决策者"/"8–14 岁学生与家长"）——风格方向由它决定，务必填写 |
+| `category` | string | 类别（university/technology/industrial/culture/ecology…），只做色板与图像微调，不决定风格 |
 | `description` | string | 产品描述（必填） |
 | `benefits` | array | 核心卖点，最多 5 条，`{title, description}` 或字符串 |
 | `modules` | array | 内容模块，最多 5 条 |
@@ -114,7 +115,7 @@ node scripts/image-workflow.mjs manifest --download-dir ./downloads --output ima
 
 ### 4.2 选风格方向并定设计 Token
 
-按 `style-directions.md` 的选择方法定一个方向（拿不准用 editorial），然后推导四个色槽与字体配对，写入 HTML 顶部的 CSS 变量：
+**风格由读者决定，不由产品决定。** 按 `style-directions.md` 的选择方法，先看 `audience`（给谁看）和手册目的（促成什么行动）定方向——同一个产品，给企业决策者的版本和给青少年家长的版本风格必须不同；产品类别只做色板微调。拿不准用 editorial。然后推导四个色槽与字体配对，写入 HTML 顶部的 CSS 变量：
 
 ```css
 :root {
@@ -127,7 +128,7 @@ node scripts/image-workflow.mjs manifest --download-dir ./downloads --output ima
 
 ### 4.3 规划叙事页
 
-按设计知识库 §7 的叙事弧，把 product.json 的内容映射到 6/8/10 页计划：封面钩子 → 语境 → 价值 → 展开 → 呼吸页 → 证据 → 高潮 → 行动。**信息量不够就做 6 页，不注水**。
+按设计知识库 §7 的叙事弧，把 product.json 的内容映射到页计划。先判断形态：**单产品**用 §7.1 叙事弧（封面钩子 → 语境 → 价值 → 展开 → 呼吸页 → 证据 → 高潮 → 行动）；**多产品目录**用 §7.2 目录结构（封面 → 品牌 → 每产品 1–2 页同版式 → 行动）。信息量不够就少做页数，不注水；卖点超过 3 个先按 §7.0 做编辑取舍，再排版。
 
 ### 4.4 写 HTML
 
@@ -164,7 +165,7 @@ node scripts/image-workflow.mjs manifest --download-dir ./downloads --output ima
 node scripts/check.mjs --html brochure.html --product product.json --images images.json
 ```
 
-检查内部字段泄露（成本/渠道/margin…）、遗留的 `【待确认】`、不合规图片来源。存在 ERROR 时退出码为 2，**不得交付**。
+检查内部字段泄露（成本/渠道/margin…）、广告法敏感词（保过/确保/100%…，WARNING 级需人工确认语境）、遗留的 `【待确认】`、不合规图片来源。存在 ERROR 时退出码为 2，**不得交付**。
 
 ### 5.3 导出 PDF
 
@@ -207,8 +208,10 @@ node scripts/html-to-pptx.mjs --html brochure.html --output <产品名>.pptx
 1. 任何不确定的事实显示为 `【待确认】`，不替用户猜测。
 2. 成本、利润、渠道、结算、供应商等内部字段必须剥离，不得出现在任何页面。
 3. 交付稿禁止 `preview` / `web` / `ai_generated` 图片；禁止用 AI 生成图代表真实场馆、产品、活动或人物。
-4. 涉及价格、预约、审批、体验项目等可能变动的事项，在尾页或规格页注明"以最终确认/现场安排为准"。
-5. 交付前必须完成第 5.1 节目检并在交付说明中记录。
+4. **广告法合规**：文案禁止保证性承诺（保过/确保录取/100%）与绝对化用语（最好/顶级/第一品牌），详见 `references/fact-policy.md`；用可验证的事实代替形容词。
+5. **肖像权**：未取得授权不使用人物正脸特写；**未成年人照片**优先背影/侧脸/远景，详见 `references/image-policy.md`。
+6. 涉及价格、预约、审批、体验项目等可能变动的事项，在尾页或规格页注明"以最终确认/现场安排为准"。
+7. 交付前必须完成第 5.1 节目检并在交付说明中记录。
 
 ---
 

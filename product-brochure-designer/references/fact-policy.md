@@ -19,3 +19,13 @@ Derived education or product value may be used only as a non-guaranteed benefit,
 ## Marking gaps
 
 Required facts `name` and `description` are automatically replaced with `【待确认】` when empty. Any other field the team cannot confirm should also be marked `【待确认】` in the product file rather than invented.
+
+## Advertising compliance (宣传合规)
+
+《广告法》对教育、培训、招商等场景的宣传用语有硬性限制。手册文案**禁止**出现：
+
+- 保证性承诺：保过、包过、确保录取/升学/通过、承诺效果、100%、百分百
+- 绝对化用语：最好、最优、顶级、第一品牌、国家级（无依据时）、权威认证（无依据时）
+- 虚构背书：未经证实的"官方指定""独家合作""名校直通"
+
+替代表达：用可验证的事实代替形容词（"累计服务 3000 名学生"优于"最受欢迎"），用"有助于/可作为参考"代替保证。`scripts/check.mjs` 会对最终 HTML 做敏感词扫描（WARNING 级），命中项需人工逐条确认。
